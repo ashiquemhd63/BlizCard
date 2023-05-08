@@ -6,9 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.layout.ModifierLocalPinnableParent
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +39,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CreateBizCard() {
-    val buttonClickedState = remember { mutableStateOf((false))}
+    val buttonClickedState = remember { mutableStateOf((false)) }
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -89,7 +94,7 @@ fun CreateBizCard() {
                 Divider(
                     thickness = 2.dp,
 
-                )
+                    )
                 CreateInfo()
                 Button(
                     onClick = {
@@ -97,21 +102,21 @@ fun CreateBizCard() {
                         buttonClickedState.value = !buttonClickedState.value
                     }
                 ) {
-                    Text(text = "Portfolio",
+                    Text(
+                        text = "Portfolio",
 
                         )
                 }
-                if (buttonClickedState.value){
+                if (buttonClickedState.value) {
                     Content()
-                }
-                else{
+                } else {
                     Box() {
-                        
+
                     }
                 }
 
             }
-            
+
 
         }
     }
@@ -141,37 +146,75 @@ private fun CreateImageProfile(modifier: Modifier = Modifier) {
         shape = CircleShape,
         border = BorderStroke(0.5.dp, Color.LightGray),
         shadowElevation = 4.dp,
-
-        ) {
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+    ) {
         Image(
             painter = painterResource(id = R.drawable.profile_image),
-            contentDescription = "profile image"
+            contentDescription = "profile image",
+            modifier = modifier.size(135.dp),
+            contentScale = ContentScale.Crop
         )
     }
 }
+
 @Composable
-fun Content(){
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(5.dp)
-    ){
-        Surface(modifier = Modifier
-            .padding(3.dp)
-            .fillMaxSize(),
+fun Content() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+    ) {
+        Surface(
+            modifier = Modifier
+                .padding(3.dp)
+                .fillMaxSize(),
             shape = RoundedCornerShape(corner = CornerSize(12.dp)),
             border = BorderStroke(2.dp, color = Color.LightGray)
 
         ) {
-            Portfolio(data = listOf("Project", "Project2"))
+            Portfolio(data = listOf("Project1", "Project2", "Project4", "Project5", "project6"))
         }
     }
 }
 
 @Composable
 fun Portfolio(data: List<String>) {
-    LazyColumn{
-        items(data){
-            item -> Text(text = "$item")
+    LazyColumn {
+        items(data) { item ->
+            Card(
+                modifier = Modifier
+                    .padding(13.dp)
+                    .fillMaxWidth(),
+                shape = RectangleShape,
+
+
+                ) {
+                Row(
+                    modifier = Modifier
+                        .padding(8.dp)
+
+                ) {
+                    CreateImageProfile(modifier = Modifier.size(100.dp))
+                    Column(
+                        modifier = Modifier
+                            .padding(7.dp)
+                            .align(Alignment.CenterVertically)
+
+
+                    )
+                    {
+                        Text(
+                            text = "$item",
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "A great project",
+                   )
+                    }
+
+
+                }
+            }
         }
     }
 }
